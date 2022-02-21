@@ -4,7 +4,7 @@ import signal
 import time
 import datetime
 import numpy
-import scipy.io.wavfile
+from scipy.io.wavfile import write
 import soundfile
 import wave
 from edge_impulse_linux.audio import AudioImpulseRunner
@@ -77,25 +77,24 @@ def main(argv):
 
             i = 0
             combined_audio = b''
-            for res, audio in runner.classifier(device_id=selected_device_id):
+            for res, features in runner.classifier(device_id=selected_device_id):
                 print_classification_result(res, labels)
 
                 predictions = res['result']['classification']
                 prediction_label, prediction_confidence = highest_prediction(predictions)
                 threshold = os.getenv("CONFIDENCE_THRESHOLD") or 0.7
 
-                i = i + 1
-                combined_audio = b''.join([combined_audio, audio])
-                with open("/home/pi/final_year_project/sounds/test.txt", "a") as file:
-                    file.write(prediction_label+"\n")
+                # i = i + 1
+                # combined_audio = b''.join([combined_audio, audio])
+                # with open("/home/pi/final_year_project/sounds/test.txt", "a") as file:
+                    # file.write(prediction_label+"\n")
                 current_time = datetime.datetime.now().astimezone().replace(microsecond=0).isoformat()
+                write("sounds/" + current_time + "-" + prediction_label + ".wav", model_info['model_parameters']['frequency'], features)
 
-                if i == 10:
-                    break
-                    
-            audio_final = numpy.frombuffer(combined_audio, dtype=numpy.int16)
-            print(audio_final)
-            soundfile.write("sounds/test.wav", audio_final, 16000)
+                # if i == 10:
+                    # break    
+                # audio_final = numpy.frombuffer(audio, dtype=numpy.int16)
+                # soundfile.write("sounds/" + current_time + "-" + prediction_label + ".wav", audio_final, 16000)
                 # sound_array = numpy.array(bytearray(audio), dtype=numpy.int16)
                 # scipy.io.wavfile.write("sounds/" + current_time + "-" + prediction_label + ".wav", 16000, sound_array)
                  
