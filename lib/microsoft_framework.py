@@ -8,9 +8,9 @@ from tflite_runtime.interpreter import Interpreter
 import tensorflow as tf
 
 def saveAudio():
-    fs = 44100  # Sample rate
+    fs = 22050  # Sample rate
     seconds = 2  # Duration of recording
-    
+
     myrecording = sd.rec(int(seconds * fs), samplerate=fs, channels=1)
     sd.wait()  # Wait until recording is finished
     write('./sound.wav', fs, myrecording)  # Save as WAV file
@@ -21,21 +21,21 @@ def convertAudioToFeatures():
     window_len = 2 # seconds
     samples_per_window = fs * window_len
     curr_data = None
-    
+
     # generate all 2 seconds windows as a list, then round down
     # the label start time to the nearest 2 second window.
     all_windows = np.arange(0, np.ceil(len(wav) / samples_per_window).astype(np.int))
-    
+
     for w in all_windows:
         start = w * samples_per_window
         end = start + samples_per_window
         length = end - start
-                         
+
         window = wav[start:end]
         if (not len(window) == length):
             padding = length - len(window)
             window = np.pad(window, (0, padding), 'constant')
-                
+
         if curr_data is None:
             curr_data = np.array([window])
         else:
@@ -58,12 +58,12 @@ def runInference(fbank):
     imported_svm = joblib.load('ml_models/svm.pkl')
     imported_model = tf.keras.models.load_model('saved_model/microsoft_model')
     print(imported_model.summary())
-        
+
     # imported_model_interpreter = Interpreter('ml_models/feature_model.tflite')
     # input_details = imported_model_interpreter.get_input_details()[0]['index']
     # output_details = imported_model_interpreter.get_output_details()[0]['index']
     # imported_model_interpreter.allocate_tensors()
-    
+
     # Carrying out inference.
     # imported_model_interpreter.set_tensor(input_details, normal_batch)
     # imported_model_interpreter.invoke()
