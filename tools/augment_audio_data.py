@@ -30,7 +30,7 @@ def inject_noise(path):
     audio, sampling_rate = librosa.load(path)
 
     noise = np.random.randn(len(audio))
-    noise_factor = 0.01
+    noise_factor = 0.001
     augmented_audio = audio + noise_factor * noise
     sf.write("augmented_files/" + filename + '_noise_injected.wav', augmented_audio, sampling_rate, 'PCM_16')
 
