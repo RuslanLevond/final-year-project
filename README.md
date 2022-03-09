@@ -127,3 +127,38 @@ sudo apt-get install sqlite3
 
 1. Create database using `sqlite3 gateway_storage.db`
 2. Create table with the following command `CREATE TABLE classification_results(id INTEGER PRIMARY KEY AUTOINCREMENT, audio_file_name TEXT, confidence_level REAL, classification TEXT, time DATETIME);`
+
+## Arduino Configurations
+
+By following the described procedures, you would be able to run edge Arduino framework
+on the Arduino Nano 33 BLE Sense. Before starting, install Arduino IDE which will be used to upload
+Edge Framework to your Arduino device:
+
+1. Navigate to [arduino website](https://www.arduino.cc/en/software), download and install Arduino IDE 1.8.19 on your computer.
+2. On launching IDE, install core for Nano board by going to Tools > Board > Board Manager. Install `Arduino Mbed OS Nano Boards` core.
+
+### Import Edge Framework
+
+Upload edge framework sketch by navigating to Sketch > Add File.
+
+### Export Edge Impulse ML Model
+
+Download machine learning model as Arduino library using Edge Impulse GUI by going to
+Deployment > Arduino Library > Build. This will download a .zip folder, do not unzip it.
+
+### Import Edge Impulse ML Model
+
+Before starting, make sure that old library has been removed if installed previously, can be found in `/Users/<user>/Documents/Arduino/libraries/final-year-project_inferencing`.
+Import the downloaded Arduino library by going to Sketch > Include Library > Add .ZIP library, select your downloaded .zip folder.
+
+### Configure Arduino board and port
+
+Before starting, make to connect your Arduino to your computer using USB. To be able to upload the model and sketch to Arduino device,
+you will need to configure its board and port. Navigate to Tools > Boards > Arduino Mbed OS Nano Boards and
+select Arduino Nano 33 BLE Sense. After, go to Tools > Port and select the USB port you connected to your Arduino.
+
+### Uploading Sketch to Arduino Device
+
+To compile and upload your sketch to your Arduino Device, click the "Upload" button.
+After the upload is finished, the library will start inferencing straight away. To see the logs,
+click on "Serial Monitor".
