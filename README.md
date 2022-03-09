@@ -60,6 +60,10 @@ For more information [here](https://forum.edgeimpulse.com/t/exporting-audio-from
 
 You can verify the model is working on the device using `edge-impulse-linux-runner`
 
+#### Download library for sending messages over Lora
+
+Use ["Using with Raspberry Pi"](https://www.waveshare.com/wiki/SX1268_433M_LoRa_HAT) guide to change jumpers on the transceiver and download `sx126x.py` file. Place the file in the same directory as the `edge_framework.py`.
+
 #### Launching the Framework on Startup
 
 1. First make the system to open terminal on startup by adding `@lxterminal` to `/etc/xdg/lxsession/LXDE-pi/autostart`.
