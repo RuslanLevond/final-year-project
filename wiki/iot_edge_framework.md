@@ -12,16 +12,20 @@ for each of the hardware solutions; in Python for RPI and in C++ for Arduino.
 On booting up either of devices, the framework will start classifying sounds straight away,
 on condition that ML model is present and if microphone input device is available.
 
-Arduino Version:
+#### Arduino Version
+
 On booting up the Arduino, framework will be initialised within the setup block,
 after which the whole of framework and classification code will be started within the loop block.
 
-Raspberry Pi Version:
+#### Raspberry Pi Version
+
 On booting up the Raspberry Pi, python file containing the framework will be ran
-as one of the boot up processes with model, confidence threshold and microphone input device id as arguments.
+as one of the boot up processes with model and microphone input device id as arguments.
 The `.bashrc` file will be used to run the model on the system start up.
 
 ### Machine Learning Model: Collecting Audio and Classification
+
+#### Raspberry Pi Version
 
 The next step of the framework would be the classification. Edge Impulse supplies
 [Python SDK](https://github.com/edgeimpulse/linux-sdk-python) for RPI which collects
@@ -40,7 +44,13 @@ On specified confidence threshold, the results with metadata will be wirelessly 
 over the Lora protocol. Before data will be sent, it will be converted to binary
 as that is the only format Lora supports. The following data will be sent:
 
-* Audio file - Continuous audio fragments with predictions above the threshold will be combined to make a sound file.
+* Audio - Raw binary audio of the prediction.
+* Frequency - The frequency the audio was recorded by the model, specified within the Edge Impulse.
 * Confidence level - Between 0.0 and 1.0, how confident is the model.
 * Classification - the animal name that the model predicted.
 * Time - the time at which the prediction was made, in ISO 8601 format.
+
+#### Raspberry Pi Version
+
+To not hold the machine learning inference process, sending lora message task will be spawned as a process,
+which would finish in its own time.
