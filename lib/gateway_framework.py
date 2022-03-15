@@ -25,9 +25,9 @@ def connect_to_database():
 
 def insert_result(result):
     dbconnect, cursor = connect_to_database()
-    insert_query = '''INSERT INTO classification_results (audio_file_name, confidence_level, classification, time)
-        values ('{audio_file_name}', {confidence_level}, '{classification}', '{time}')'''.format(
-        audio_file_name = result.get('audio'),
+    insert_query = '''INSERT INTO classification_results (confidence_level, classification, time)
+        values ('{confidence_level}', '{classification}', '{time}')'''.format(
+        # audio_file_name = result.get('audio'),
         confidence_level = result.get('confidence_level'),
         classification = result.get('classification'),
         time = result.get('time')
@@ -36,7 +36,6 @@ def insert_result(result):
     cursor.execute(insert_query);
     dbconnect.commit();
     dbconnect.close()
-    print("Successfully inserted the result")
 
 def list_classifications():
     dbconnect, cursor = connect_to_database()
@@ -63,18 +62,22 @@ def export(path):
     dbconnect.close();
     print(f"Successfully exported to - {path}")
 
-def list_to_results():
+def listen_to_results():
     # Listens to Lora messages and saves them to the database.
-    # if msg:
-        # # Save image and get file location.
-        # # Decrypt message
-        # decrypted_result = {
-        # 'audio': audio_file_location,
-        # 'confidence_level': confidence_level,
-        # 'classification': classification,
-        # 'time': time
-        # }
-        # insert_result(decrypted_result)
+    address = 0
+    node = sx126x.sx126x(serial_num="/dev/ttyS0", freq=433, addr=address, power=22, rssi=False, air_speed=2400, relay=False)
+    print(f'Listening to Lora messages at address {address}')
+    
+    while True:
+        result = node.receive()
+        if result != None:
+            try:
+                decoded_result = json.loads(result.decode('utf-8'))
+                insert_result(decoded_result)
+                print(f'Saved result - {decoded_result}')
+            except:
+                # In case of packet loss or mixed packets.
+                print(f'Packet loss - {result}')
 
 def signal_handler(sig, frame):
     # On interrupting, will shut down the model and exit the program.
@@ -83,12 +86,6 @@ def signal_handler(sig, frame):
 
 # Listens to interrupt from keyboard (CTRL + C)
 signal.signal(signal.SIGINT, signal_handler)
-
-# def listen_to_lora_messages():
-#     # Listens to messages on 433MHz frequency and address 100.
-#     print("Listening to Lora messages")
-#     node = sx126x.sx126x(serial_num="/dev/ttyS0", freq=433, addr=100, power=22, rssi=True, air_speed=2400, relay=False)
-#     node.receive()
 
 def help():
     print('python3 gateway_framework.py --list_classifications --list_classifications_by_label <label> --export </location/file_name.csv> --listen_to_results' )
@@ -117,7 +114,7 @@ def main(argv):
         else:
             assert False, "unhandled option"
 
-    if len(opt) == 0:
+    if len(opts) == 0:
         help()
         sys.exit(2)
 
@@ -127,63 +124,6 @@ def main(argv):
     #     imported_res = json.loads(binary_res.decode('utf-8'))
     #     imported_res["audio"] = numpy.array(imported_res["audio"], dtype="int16")
     #     write("/home/pi/final_year_project/sounds/" + imported_res["time"] + "-" + imported_res["classification"] + ".wav", imported_res["frequency"], imported_res["audio"])
-
-
-    # with AudioImpulseRunner(modelfile) as runner:
-        # try:
-            # model_info = runner.init()
-            # print("Model parameters:")
-            # print(model_info["model_parameters"])
-            # labels = model_info['model_parameters']['labels']
-            # print('Loaded runner for "' + model_info['project']['owner'] + ' / ' + model_info['project']['name'] + '"')
-#
-            # # Let the library choose an audio interface suitable for this model, or pass device ID parameter to manually select a specific audio interface.
-            # selected_device_id = None
-            # if len(args) >= 2:
-                # selected_device_id=int(args[1])
-                # print("Device ID "+ str(selected_device_id) + " has been provided as an argument.")
-#
-            # i = 0
-            # combined_audio = b''
-            # for res, audio in runner.classifier(device_id=selected_device_id):
-                # print_classification_result(res, labels)
-#
-                # predictions = res['result']['classification']
-                # prediction_label, prediction_confidence = highest_prediction(predictions)
-                # threshold = os.getenv("CONFIDENCE_THRESHOLD") or 0.7
-#
-                # i = i + 1
-                # combined_audio = b''.join([combined_audio, audio])
-                # with open("/home/pi/final_year_project/sounds/test.txt", "a") as file:
-                    # file.write(prediction_label+"\n")
-                # # if i == 10:
-                    # # break
-                #
-                # # If the predicted class has confidence over or equal to the confidence threshold
-                # # And if the prediction label doesn't start with "_" so it wouldn't capture the generic classes like _background_noise.
-                #
-                # # if prediction_confidence >= threshold and not prediction_label.startswith("_"):
-                    # # print("Classified " + prediction_label + " at confidence level of " + str(round(prediction_confidence, 2)))
-                    # # current_time = datetime.datetime.now().astimezone().replace(microsecond=0).isoformat()
-                    # # print("start")
-                    # # {
-                    # # "sound_file": audio,
-                    # # "confidence_level": prediction_confidence,
-                    # # "classification": prediction_label,
-                    # # "time": current_time
-                    # # }
-            # # sound_array = numpy.array(bytearray(combined_audio), dtype=numpy.int16)
-            # # scipy.io.wavfile.write("sounds/" + current_time + "-" + prediction_label + ".wav", 16000, sound_array)
-                    # # print("end")
-                    # # with open("sounds/" + current_time + "-" + prediction_label + ".wav", "bx") as file:
-                        # # file.write(audio)
-                    #
-                #
-#
-        # finally:
-            # # If for any reason the model stops classifying, the model will be stopped.
-            # if (runner):
-                # runner.stop()
 
 if __name__ == '__main__':
     # Main function will be executed when running the source file.

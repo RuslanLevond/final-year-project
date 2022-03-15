@@ -60,9 +60,9 @@ For more information [here](https://forum.edgeimpulse.com/t/exporting-audio-from
 
 You can verify the model is working on the device using `edge-impulse-linux-runner`
 
-#### Download library for sending messages over Lora
+#### Setup Lora Transceiver
 
-Use ["Using with Raspberry Pi"](https://www.waveshare.com/wiki/SX1268_433M_LoRa_HAT) guide to change jumpers on the transceiver and download `sx126x.py` file. Place the file in the same directory as the `edge_framework.py`.
+Use ["Using with Raspberry Pi"](https://www.waveshare.com/wiki/SX1268_433M_LoRa_HAT) guide to change jumpers on the transceiver and enable Serial port. Then download `sx126x.py` file from tools and place it in the same directory as the `edge_framework.py`.
 
 #### Launching the Framework on Startup
 
@@ -127,6 +127,11 @@ sudo apt-get install sqlite3
 
 1. Create database using `sqlite3 gateway_storage.db`
 2. Create table with the following command `CREATE TABLE classification_results(id INTEGER PRIMARY KEY AUTOINCREMENT, audio_file_name TEXT, confidence_level REAL, classification TEXT, time DATETIME);`
+
+#### Repeat steps from 'Configuring for Edge Framework'
+
+* Launching the Framework on Startup
+* Setup Lora Transceiver
 
 ## Arduino Configurations
 

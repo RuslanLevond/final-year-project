@@ -48,14 +48,14 @@ def highest_prediction(predictions):
     return max_prediction, predictions.get(max_prediction)
 
 def send_lora_message(node, payload):
-    # Starts a process that will send result as Lora message over 433MHz to node with address 100.
+    # Starts a process that will send result as Lora message over 433MHz to node with address 0.
 
     # Converts result into json string and encodes into binary.
     binary_payload = json.dumps(payload).encode('utf-8')
 
     # Splitting address into two 8 bit numbers.
-    receiving_node_high_8bit_address = bytes([100>>8])
-    receiving_node_low_8bit_address = bytes([100&0xff])
+    receiving_node_high_8bit_address = bytes([0>>8])
+    receiving_node_low_8bit_address = bytes([0&0xff])
     receiving_offset_frequency = bytes([433 - 410])
 
     own_high_8bit_address = bytes([100>>8])
@@ -104,7 +104,7 @@ def main(argv):
                 print("Device ID "+ str(selected_device_id) + " has been provided as an argument.")
 
             # Initialise Lora transceiver on 433MHz with address 100.
-            node = sx126x.sx126x(serial_num="/dev/ttyS0", freq=433, addr=100, power=22, rssi=True, air_speed=2400, relay=False)
+            node = sx126x.sx126x(serial_num="/dev/ttyS0", freq=433, addr=100, power=22, rssi=False, air_speed=2400, relay=False)
 
             for res, features in runner.classifier(device_id=selected_device_id):
                 print_classification_result(res, labels)
@@ -121,7 +121,7 @@ def main(argv):
                     current_time = datetime.datetime.now().astimezone().replace(microsecond=0).isoformat()
                     frequency = model_info['model_parameters']['frequency']
                     res = {
-                            "audio": features.tolist(),
+                            # "audio": features.tolist(),
                             "frequency": frequency,
                             "confidence_level": prediction_confidence,
                             "classification": prediction_label,
@@ -130,6 +130,7 @@ def main(argv):
 
                     process = multiprocessing.Process(target=send_lora_message, args=(node, res))
                     process.start()
+                    # process.join()
                     all_processes.append(process)
 
         finally:
