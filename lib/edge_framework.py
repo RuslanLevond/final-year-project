@@ -60,11 +60,23 @@ def send_lora_message(node, payload):
 
     own_high_8bit_address = bytes([100>>8])
     own_low_8bit_address = bytes([100&0xff])
-    own_offset_frequency =bytes([node.offset_freq])
+    own_offset_frequency = bytes([node.offset_freq])
 
     data = receiving_node_high_8bit_address + receiving_node_low_8bit_address + receiving_offset_frequency + own_high_8bit_address + own_low_8bit_address + own_offset_frequency + binary_payload
     node.send(data)
     print("Sent Lora message.")
+
+def save_audio(audio, classification, time, frequency):
+    # Save the raw audio as .wav file in ./sounds dir to be able to retreive it when needed.
+    directory_name = "/home/pi/final_year_project/sounds/"
+    directory = os.path.dirname(directory_name)
+    if not os.path.exists(directory):
+        # Create the sounds directory if it doesn't exist
+        os.makedirs(directory)
+
+    filename = directory_name + time + "-" + classification + ".wav"
+    write(filename, frequency, audio)
+    return filename
 
 def main(argv):
     try:
@@ -118,11 +130,12 @@ def main(argv):
                 # Then send the result to the Gateway device.
                 if prediction_confidence >= threshold and not prediction_label.startswith("_"):
                     print("Classified " + prediction_label + " at confidence level of " + str(round(prediction_confidence, 2)))
-                    current_time = datetime.datetime.now().astimezone().replace(microsecond=0).isoformat()
+                    current_time = datetime.datetime.now().astimezone().isoformat()
                     frequency = model_info['model_parameters']['frequency']
+                    filename = save_audio(features, prediction_label, current_time, frequency)
+                    
                     res = {
-                            # "audio": features.tolist(),
-                            "frequency": frequency,
+                            "filename": filename,
                             "confidence_level": prediction_confidence,
                             "classification": prediction_label,
                             "time": current_time
@@ -130,7 +143,6 @@ def main(argv):
 
                     process = multiprocessing.Process(target=send_lora_message, args=(node, res))
                     process.start()
-                    # process.join()
                     all_processes.append(process)
 
         finally:
