@@ -133,6 +133,12 @@ sudo apt-get install sqlite3
 * Launching the Framework on Startup
 * Setup Lora Transceiver
 
+#### Configuring SSH key to download audio from Edge without password
+
+Gateway Raspberry Pi can download audio saved on the Edge Raspberry Pi when they are connected to the same network.
+To not be prompted for password for every audio file download, use [this tutorial](https://pimylifeup.com/raspberry-pi-ssh-keys/) to generate SSH keys
+and copy them over to the Edge.
+
 ## Arduino Configurations
 
 By following the described procedures, you would be able to run edge Arduino framework
