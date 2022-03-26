@@ -16,10 +16,8 @@ the boot up processes. Python file execution will be specified within the `.bash
 ### Decoding and Storing messages
 
 On receiving a message, it will convert the message from binary into its original format.
-For audio file data, it will be converted into `.wav` file and stored locally.
-The rest of the metadata including path to the audio file, will be stored within SQLite
-table. The reason why it will be stored in SQLite is because it is energy efficient with rich ability
-to query data that CSV format doesn't have.
+All of the data will be stored within SQLite table. The reason why it will be stored in
+SQLite is because it is energy efficient with rich ability to query data that CSV format doesn't have.
 
 ### CLI Functionality
 
@@ -46,3 +44,13 @@ specific to a certain class. The command requires a label as argument.
 
 `--listen_to_results` option can be used to start a process that will listen to any
 incoming Lora messages and save them into the database. It will be used by the `.bashrc` on startup.
+
+#### Download Audio from Edge
+
+`--download_audio_from_edge </path_to_local_dir>` option can be used to download audio files stored on the edge device,
+when edge device is connected to the same network. The command will go through the gateway's database and
+will download Edge device's sound files using SSH. The command requires path to the local directory where
+sounds will be saved to.
+
+The command was introduced due to inability to transfer audio over Lora protocol because of limited
+message size.

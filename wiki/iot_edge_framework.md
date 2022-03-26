@@ -25,6 +25,9 @@ The `.bashrc` file will be used to run the model on the system start up.
 
 ### Machine Learning Model: Collecting Audio and Classification
 
+The audio collection and classification both will be done in real time, meaning that
+no audio will be missed during classification.
+
 #### Raspberry Pi Version
 
 The next step of the framework would be the classification. Edge Impulse supplies
@@ -38,19 +41,44 @@ Machine Learning Model will be manually exported from Edge Impulse as an `.eim` 
 that is compatible with the provided Python SDK. This can be done with the following command:
 `edge-impulse-linux-runner --download modelfile.eim`.
 
+#### Arduino Version
+
+Two buffers are going to be used to store audio data, one is used for inference and another for
+sampling data. These buffers will be time sequential FIFO (First In First Out), after each iteration
+the oldest audio slice is removed and new one is inserted at the beginning, resulting in audio slice
+being inferenced multiple times improving the accuracy. Averaging will be introduced on all those inferences to
+filter out false positives.
+
+Both buffers will be switched between, when the sampling buffer becomes full of audio slices,
+passing the full buffer to the inference and then clearing and filling up the old buffer with new data.
+
+### Storing Audio Locally
+
+Due to limited 256 bytes Lora message size, audio will not be sent over the Lora protocol.
+Instead, it will be saved locally which can be then retrieved manually over SSH.
+
+#### Raspberry Pi Version
+
+After a successful inference for the targeted classification, the raw audio will be converted
+into `.wav` file and will be saved locally.
+
+#### Arduino Version
+
+Due to lack of non-volatile memory in Arduino Nano 33 BLE Sense, audio will not be saved
+on the device.
+
 ### Transferring Results Wirelessly
 
 On specified confidence threshold, the results with metadata will be wirelessly transmitted
 over the Lora protocol. Before data will be sent, it will be converted to binary
 as that is the only format Lora supports. The following data will be sent:
 
-* Audio - Raw binary audio of the prediction.
-* Frequency - The frequency the audio was recorded by the model, specified within the Edge Impulse.
+* Audio File Name - Path and name of the audio file stored on the edge device.
 * Confidence level - Between 0.0 and 1.0, how confident is the model.
 * Classification - the animal name that the model predicted.
 * Time - the time at which the prediction was made, in ISO 8601 format.
 
-#### Raspberry Pi Version
+#### Both Raspberry Pi and Arduino Versions
 
 To not hold the machine learning inference process, sending lora message task will be spawned as a process,
 which would finish in its own time.
