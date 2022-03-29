@@ -85,6 +85,7 @@ pip install pandas
 pip install python_speech_features
 pip install joblib
 pip install sklearn
+pip install tflite_runtime
 ```
 
 ##### Installing Tensorflow

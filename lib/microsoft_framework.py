@@ -9,15 +9,17 @@ import tensorflow as tf
 
 def saveAudio():
     fs = 22050  # Sample rate
-    seconds = 2  # Duration of recording
+    seconds = 6  # Duration of recording
 
+    print("Starting to record")
     myrecording = sd.rec(int(seconds * fs), samplerate=fs, channels=1)
     sd.wait()  # Wait until recording is finished
     write('./sound.wav', fs, myrecording)  # Save as WAV file
+    print("Stopped recording")
 
 def convertAudioToFeatures():
     # Reading sounds
-    wav, fs = soundfile.read('/home/pi/final_year_project/microsoft_acoustic_recognition/sound.wav')
+    wav, fs = soundfile.read('./sound.wav')
     window_len = 2 # seconds
     samples_per_window = fs * window_len
     curr_data = None
@@ -55,20 +57,10 @@ def runInference(fbank):
                                        features_normal.shape[2],
                                        1)
     # Importing classification and feature model.
-    imported_svm = joblib.load('ml_models/svm.pkl')
-    imported_model = tf.keras.models.load_model('saved_model/microsoft_model')
-    print(imported_model.summary())
-
-    # imported_model_interpreter = Interpreter('ml_models/feature_model.tflite')
-    # input_details = imported_model_interpreter.get_input_details()[0]['index']
-    # output_details = imported_model_interpreter.get_output_details()[0]['index']
-    # imported_model_interpreter.allocate_tensors()
+    imported_svm = joblib.load('./svm.pkl')
+    imported_model = tf.keras.models.load_model('./microsoft_model')
 
     # Carrying out inference.
-    # imported_model_interpreter.set_tensor(input_details, normal_batch)
-    # imported_model_interpreter.invoke()
-    # output_data = imported_model_interpreter.get_tensor(output_details)
-    # results = imported_svm.predict(output_data[-1])
     features = imported_model(normal_batch)
     results = imported_svm.predict(features[-1])
     return results
@@ -78,6 +70,7 @@ def main():
     saveAudio()
     fbank = convertAudioToFeatures()
     results = runInference(fbank)
+    print("Results:")
     print(results)
     print("Done.")
 
