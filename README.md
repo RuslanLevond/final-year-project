@@ -4,6 +4,10 @@
 
 Please go to `/wiki` for more information.
 
+## Machine Learning Model
+
+The ML model that was developed during the final year project is made publicly [here](https://studio.edgeimpulse.com/public/81005/latest).
+
 ## Raspberry Pi Configurations
 
 By following the described procedures, you would be able to run either of the frameworks
