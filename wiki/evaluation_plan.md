@@ -60,10 +60,10 @@ The following metrics will be captured to compare Raspberry Pi and Arduino archi
 
 * Battery capacity - how big is the battery in mAh.
 * Energy usage - electrical current the architecture requires while running the model,
-measure in mA.
+measured in mA.
 * Operating Time - the total time the architecture can run on battery before it needs
 to be recharged.
-* Processing time for feature extraction - how long it takes to extraction features.
+* Processing time for feature extraction - how long it takes to extract features.
 * Processing time for inference - how long it takes for the model to run inference.
 * Total processing time - the latter two combined.
 * Total RAM usage average - how much does the architecture use RAM on average, while

@@ -66,7 +66,7 @@ You can verify the model is working on the device using `edge-impulse-linux-runn
 
 #### Setup Lora Transceiver
 
-Use ["Using with Raspberry Pi"](https://www.waveshare.com/wiki/SX1268_433M_LoRa_HAT) guide to change jumpers on the transceiver and enable Serial port. Then download `sx126x.py` file from tools and place it in the same directory as the `edge_framework.py`.
+Use ["Using with Raspberry Pi"](https://www.waveshare.com/wiki/SX1268_433M_LoRa_HAT) guide to change jumpers on the transceiver and enable Serial port. Then download `/tools/sx126x.py` file and place it in the same directory as the `edge_framework.py`.
 
 #### Launching the Framework on Startup
 
@@ -169,9 +169,9 @@ Import the downloaded Arduino library by going to Sketch > Include Library > Add
 
 ### Configure Arduino board and port
 
-Before starting, make to connect your Arduino to your computer using USB. To be able to upload the model and sketch to Arduino device,
+Before starting, connect your Arduino to your computer using USB. To be able to upload the model and sketch to Arduino device,
 you will need to configure its board and port. Navigate to Tools > Boards > Arduino Mbed OS Nano Boards and
-select Arduino Nano 33 BLE Sense. After, go to Tools > Port and select the USB port you connected to your Arduino.
+select Arduino Nano 33 BLE Sense. After, go to Tools > Port and select the USB port your Arduino is connected to.
 
 ### Uploading Sketch to Arduino Device
 

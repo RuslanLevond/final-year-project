@@ -33,9 +33,9 @@ no audio will be missed during classification.
 The next step of the framework would be the classification. Edge Impulse supplies
 [Python SDK](https://github.com/edgeimpulse/linux-sdk-python) for RPI which collects
 sensor data and provides API functions to the model. Firstly, it will be used
-to collect audio data as fast as it can process (every 10ms on average). The next
-step would be classification, SDK will automatically forward sound to the model
-for classification, which will return predictions.
+to collect audio data as fast as it can process. The next step would be classification,
+SDK will automatically forward sound to the model for classification, which will
+return predictions.
 
 Machine Learning Model will be manually exported from Edge Impulse as an `.eim` file
 that is compatible with the provided Python SDK. This can be done with the following command:
@@ -49,8 +49,8 @@ the oldest audio slice is removed and new one is inserted at the beginning, resu
 being inferenced multiple times improving the accuracy. Averaging will be introduced on all those inferences to
 filter out false positives.
 
-Both buffers will be switched between, when the sampling buffer becomes full of audio slices,
-passing the full buffer to the inference and then clearing and filling up the old buffer with new data.
+Both buffers will be switched between. When the sampling buffer becomes full of audio slices,
+the process will pass full buffer to the inference process and then will clear and fill up the old buffer with new data.
 
 ### Storing Audio Locally
 
@@ -60,7 +60,7 @@ Instead, it will be saved locally which can be then retrieved manually over SSH.
 #### Raspberry Pi Version
 
 After a successful inference for the targeted classification, the raw audio will be converted
-into `.wav` file and will be saved locally.
+into `.wav` file and saved locally.
 
 #### Arduino Version
 
@@ -74,7 +74,7 @@ over the Lora protocol. Before data will be sent, it will be converted to binary
 as that is the only format Lora supports. The following data will be sent:
 
 * Audio File Name - Path and name of the audio file stored on the edge device.
-* Confidence level - Between 0.0 and 1.0, how confident is the model.
+* Confidence level - Between 0.0 and 1.0, how confident is the model on the classification.
 * Classification - the animal name that the model predicted.
 * Time - the time at which the prediction was made, in ISO 8601 format.
 

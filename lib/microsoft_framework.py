@@ -4,7 +4,6 @@ from scipy.io.wavfile import write
 import numpy as np
 import preprocess as cmi
 import joblib
-from tflite_runtime.interpreter import Interpreter
 import tensorflow as tf
 
 def saveAudio():
@@ -56,7 +55,7 @@ def runInference(fbank):
                                        features_normal.shape[1],
                                        features_normal.shape[2],
                                        1)
-    # Importing classification and feature model.
+    # Importing SVM classifier and feature model.
     imported_svm = joblib.load('./svm.pkl')
     imported_model = tf.keras.models.load_model('./microsoft_model')
 

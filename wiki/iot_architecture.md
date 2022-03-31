@@ -17,7 +17,7 @@ be responsible for classifying data and will run the Machine Learning model. The
 will also have a microphone that will be used to listen to environment sounds.
 As they will be deployed remotely, they will have their own rechargeable battery module.
 Lastly, both edge devices will have a Lora Transceiver that will send classification
-results as messages over to the gateway using UART communication protocol.
+results as radio messages over to the gateway.
 
 There will be a second Raspberry Pi that will act as a gateway. It will be located
 close to the deployer and will be connected to the same network as deployer's computer

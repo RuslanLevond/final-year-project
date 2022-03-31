@@ -1,12 +1,8 @@
 import os
 import sys, getopt
 import signal
-import time
 import datetime
-import numpy
 from scipy.io.wavfile import write
-import soundfile
-import wave
 from edge_impulse_linux.audio import AudioImpulseRunner
 import json
 import sx126x
@@ -67,8 +63,8 @@ def send_lora_message(node, payload):
     print("Sent Lora message.")
 
 def save_audio(audio, classification, time, frequency):
-    # Save the raw audio as .wav file in ./sounds dir to be able to retreive it when needed.
-    directory_name = "/home/pi/final_year_project/sounds/"
+    # Saves the raw audio as .wav file in ./sounds dir to be able to retreive it when needed.
+    directory_name = os.path.realpath("./sounds")
     directory = os.path.dirname(directory_name)
     if not os.path.exists(directory):
         # Create the sounds directory if it doesn't exist
@@ -133,7 +129,7 @@ def main(argv):
                     current_time = datetime.datetime.now().astimezone().isoformat()
                     frequency = model_info['model_parameters']['frequency']
                     filename = save_audio(features, prediction_label, current_time, frequency)
-                    
+
                     res = {
                             "filename": filename,
                             "confidence_level": prediction_confidence,
