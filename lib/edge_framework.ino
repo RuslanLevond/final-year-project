@@ -92,7 +92,7 @@ void loop()
 
     signal_t signal;
     signal.total_length = EI_CLASSIFIER_SLICE_SIZE;
-    // Starts recording audio.
+    // Gets right buffer with full of data.
     signal.get_data = &microphone_audio_signal_get_data;
     ei_impulse_result_t result = {0};
 
@@ -148,7 +148,8 @@ void ei_printf(const char *format, ...) {
  */
 static void pdm_data_ready_inference_callback(void)
 {
-    // Callback which is used by Audio Sampling process to switch buffers when enough data is collected.
+    // Callback which is used by Audio Sampling process to switch buffers
+    // when enough data is collected.
     int bytesAvailable = PDM.available();
 
     // read into the sample buffer

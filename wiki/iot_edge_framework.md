@@ -44,12 +44,7 @@ that is compatible with the provided Python SDK. This can be done with the follo
 #### Arduino Version
 
 Two buffers are going to be used to store audio data, one is used for inference and another for
-sampling data. These buffers will be time sequential FIFO (First In First Out), after each iteration
-the oldest audio slice is removed and new one is inserted at the beginning, resulting in audio slice
-being inferenced multiple times improving the accuracy. Averaging will be introduced on all those inferences to
-filter out false positives.
-
-Both buffers will be switched between. When the sampling buffer becomes full of audio slices,
+sampling data. Both buffers will be switched between. When the sampling buffer becomes full of audio slices,
 the process will pass full buffer to the inference process and then will clear and fill up the old buffer with new data.
 
 ### Storing Audio Locally
