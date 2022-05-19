@@ -63,14 +63,14 @@ def send_lora_message(node, payload):
     print("Sent Lora message.")
 
 def save_audio(audio, classification, time, frequency):
-    # Saves the raw audio as .wav file in ./sounds dir to be able to retreive it when needed.
-    directory_name = os.path.realpath("./sounds")
+    # Saves the raw audio as .wav file in ./sounds dir to be able to retrieve it when needed.
+    directory_name = os.path.realpath("/home/pi/final_year_project/sounds")
     directory = os.path.dirname(directory_name)
     if not os.path.exists(directory):
         # Create the sounds directory if it doesn't exist
         os.makedirs(directory)
 
-    filename = directory_name + time + "-" + classification + ".wav"
+    filename = directory_name + "/" + time + "-" + classification + ".wav"
     write(filename, frequency, audio)
     return filename
 
@@ -113,6 +113,7 @@ def main(argv):
 
             # Initialise Lora transceiver on 433MHz with address 100.
             node = sx126x.sx126x(serial_num="/dev/ttyS0", freq=433, addr=100, power=22, rssi=False, air_speed=2400, relay=False)
+            send_lora_message(node, "edge_started")
 
             for res, features in runner.classifier(device_id=selected_device_id):
                 print_classification_result(res, labels)

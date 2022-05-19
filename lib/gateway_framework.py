@@ -69,8 +69,11 @@ def listen_to_results():
         if result != None:
             try:
                 decoded_result = json.loads(result.decode('utf-8'))
-                insert_result(decoded_result)
-                print(f'Saved result - {decoded_result}')
+                if decoded_result == "edge_started":
+                    print("Edge Device has started, ready to receive results.")
+                else:
+                    insert_result(decoded_result)
+                    print(f'Saved result - {decoded_result}')
             except:
                 # In case of packet loss or mixed packets.
                 print(f'Packet loss - {result}')
