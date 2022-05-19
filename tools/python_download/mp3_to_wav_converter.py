@@ -6,8 +6,8 @@ import os
 from pydub import AudioSegment
 
 # files
-src = "/Users/ruslanlevond/code/labeling_audio_data/python_download/clips"
-dst = "/Users/ruslanlevond/code/labeling_audio_data/python_download/clips/wav_converted"
+src = "./clips"
+dst = "./clips/wav_converted"
 
 for file in os.listdir(src):
     if file.endswith(".mp3"):
